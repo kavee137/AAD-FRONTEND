@@ -17770,6 +17770,9 @@ body table.listing-table.datatable {
 }
 .gallery-upload img {
   border-radius: 10px;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
 }
 .gallery-upload .profile-img-del {
   position: absolute;

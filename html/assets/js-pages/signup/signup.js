@@ -41,8 +41,17 @@ $(document).ready(function () {
             contentType: "application/json",
             data: JSON.stringify(formData),
             success: function (response) {
-                alert("Registration Successful!");
-                window.location.href = "home.html"; // Redirect to logged home page
+                Swal.fire({
+                    title: "Success!",
+                    text: "Registration Successful",
+                    icon: "success",
+                    timer: 1000,
+                    background: '#fff',
+                    showConfirmButton: false
+                }).then(() => {
+                    window.location.href = "login.html"; // Redirect to login page
+                });
+
             },
             error: function (xhr) {
                 alert("Error: " + xhr.responseText);
