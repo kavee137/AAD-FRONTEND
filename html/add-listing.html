@@ -13,6 +13,9 @@
 	<!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 
+	<!-- Sweetalert CSS -->
+	<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+
 	<!-- Fontawesome CSS -->
 	<link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
 	<link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
@@ -314,11 +317,11 @@
                             <div class="card-body">
 							    <div class="form-set">
 								    <label class="col-form-label">Listing Title <span>*</span></label>								    
-									<input type="text" class="form-control pass-input" placeholder="Title">									   
+									<input type="text" class="form-control pass-input" id="listingTitle" placeholder="Title">
 								</div>
 								<div class="form-set">
 								    <label class="col-form-label">Listing Description <span>*</span></label>
-								   	<textarea rows="6" class="form-control listingdescription" placeholder="Message"></textarea>												
+								   	<textarea rows="6" class="form-control listingdescription" id="listingDescription" placeholder="Message"></textarea>
 								</div>
 								<div class="form-set">
 								    <label class="col-form-label label-heading">Category </label>
@@ -353,7 +356,7 @@
                             <div class="card-body">
 							    <div class="form-set">
 								    <label class="col-form-label">Price</label>
-									<input type="text" class="form-control pass-input" placeholder="Rs.">
+									<input type="text" id="listingPrice" class="form-control pass-input" placeholder="Rs.">
 								</div>
 							</div>
 						</div>
@@ -381,37 +384,36 @@
 												</select>
 											</div>
 										</div>
-
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-                        <div class="card media-section">
-						    <div class="card-header">
-							    <h4>Media Information </h4>							
-							</div>
-                            <div class="card-body">
-								<!-- Gallery Section -->
-								<div class="gallery-media">
-									<h6 class="media-title">Images</h6>
-									<div class="galleryimg-upload">
+					<div class="card media-section">
+						<div class="card-header">
+							<h4>Media Information </h4>
+						</div>
+						<div class="card-body">
+							<!-- Gallery Section -->
+							<div class="gallery-media">
+								<h6 class="media-title">Images</h6>
+								<div class="galleryimg-upload">
 
-									</div>
+								</div>
+								<!-- Upload Button -->
+								<div class="settings-upload-btn">
+									<input type="file" accept="image/*" class="hide-input image-upload" id="file2" multiple>
 
-									<!-- Upload Button -->
-									<div class="settings-upload-btn">
-										<input type="file" accept="image/*" class="hide-input image-upload" id="file2">
-										<label for="file2" class="file-upload">Upload File</label>
-									</div>
+									<label for="file2" class="file-upload">Upload File</label>
 								</div>
 							</div>
 						</div>
+					</div>
 					<button class="btn btn-primary" id="submitAdBtn" type="button">Submit</button>
 				</div>
-				</div>
-			</div>		
-		</div>		
+			</div>
+		</div>
+	</div>
 		<!-- /Profile Content -->
 		
 		<!-- Footer -->
@@ -634,9 +636,7 @@
 			
 		</footer>
 		<!-- /Footer -->	
-	   
-		
-	</div>
+
 
     <!-- scrollToTop start -->
 	<div class="progress-wrap active-progress">
@@ -669,6 +669,10 @@
 	
 	<!-- Custom JS -->
 	<script src="assets/js/script.js" type="a3d0b831295c11370861d21f-text/javascript"></script>
+
+
+	<!--sweet alert-->
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
 
 

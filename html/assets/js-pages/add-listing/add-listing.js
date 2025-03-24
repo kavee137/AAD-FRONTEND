@@ -121,27 +121,43 @@ $(document).ready(function () {
 
 
 
-    // Handle Image Upload
+    let selectedFiles = []; // Array to store selected images
+
     $("#file2").on("change", function (event) {
-        var file = event.target.files[0];
-        if (file) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                var newImage = `
-                    <div class="gallery-upload">
+        let files = Array.from(event.target.files); // Convert FileList to an array
+
+        files.forEach(file => {
+            if (selectedFiles.length >= 5) {
+                Swal.fire("Limit Exceeded", "You can upload a maximum of 5 images.", "warning");
+                return;
+            }
+
+            if (!selectedFiles.some(f => f.name === file.name)) { // Avoid duplicate images
+                selectedFiles.push(file);
+
+                let reader = new FileReader();
+                reader.onload = function (e) {
+                    var newImage = `
+                    <div class="gallery-upload" data-name="${file.name}">
                         <img src="${e.target.result}" class="img-fluid" alt="Uploaded Image">
                         <a href="javascript:void(0)" class="profile-img-del"><i class="feather-trash-2"></i></a>
                     </div>
                 `;
-                $(".galleryimg-upload").append(newImage);
-            };
-            reader.readAsDataURL(file);
-        }
+                    $(".galleryimg-upload").append(newImage);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        $(this).val(''); // Reset file input
     });
 
-    // Handle Image Deletion (Event Delegation)
+// Handle Image Deletion
     $(document).on("click", ".profile-img-del", function () {
-        $(this).closest(".gallery-upload").remove();
+        let imageContainer = $(this).closest(".gallery-upload");
+        let fileName = imageContainer.attr("data-name");
+        imageContainer.remove();
+        selectedFiles = selectedFiles.filter(file => file.name !== fileName);
     });
 
 
@@ -151,75 +167,73 @@ $(document).ready(function () {
 
 // create new add listing
 
-
-
+// Handle Form Submission
     $("#submitAdBtn").click(function (event) {
         event.preventDefault(); // Prevent default form submission
 
-        // Retrieve JWT token from localStorage (ensure the user is logged in)
         let authToken = localStorage.getItem("token");
+        console.log("token " + authToken);
         if (!authToken) {
-            alert("You need to log in first!");
+            Swal.fire("Unauthorized", "You need to log in first!", "error");
             return;
         }
 
-        // Collect form data
+        let loggedInUserId = localStorage.getItem("loggedInUserId");
+
         let adDTO = {
             title: $("#listingTitle").val(),
             description: $("#listingDescription").val(),
             price: parseFloat($("#listingPrice").val()),
-            status: "ACTIVE",  // Assuming default status
-            userId: "550e8400-e29b-41d4-a716-446655440000", // Replace with logged-in user ID dynamically
-            categoryId: $("#subCategory").val(), // Selected sub-category ID
-            locationId: $("#city-select").val() // Selected city ID
+            status: "ACTIVE",
+            userId: loggedInUserId,
+            categoryId: $("#subCategory").val(),
+            locationId: $("#city-select").val()
         };
 
-        // Convert adDTO to JSON
-        let adDTOJson = JSON.stringify(adDTO);
+        // **Validation Checks**
+        if (!adDTO.title || !adDTO.description || isNaN(adDTO.price) || !adDTO.categoryId || !adDTO.locationId) {
+            Swal.fire("Validation Error", "Please fill out all required fields!", "warning");
+            return;
+        }
 
-        // Create FormData object
+        if (selectedFiles.length === 0) {
+            Swal.fire("No Images", "You must upload at least one image!", "warning");
+            return;
+        }
+
+        let adDTOJson = JSON.stringify(adDTO);
         let formData = new FormData();
         formData.append("adDTO", adDTOJson);
 
-        // Append selected images
-        let files = $("#file2")[0].files;
-        for (let i = 0; i < files.length; i++) {
-            formData.append("images", files[i]);
-        }
+        selectedFiles.forEach((file, index) => {
+            formData.append("images", file);
+        });
+
+        console.log("Total images selected:", selectedFiles.length);
+        selectedFiles.forEach(file => console.log("Appending image:", file.name));
 
         // Send AJAX request with Authorization header
         $.ajax({
             url: "http://localhost:8082/api/v1/ad/createAd",
             type: "POST",
             data: formData,
-            contentType: false, // Don't set contentType (multipart/form-data issue)
-            processData: false, // Prevent jQuery from processing FormData
+            contentType: false,
+            processData: false,
             headers: {
-                "Authorization": "Bearer " + authToken  // Include JWT token
+                'Authorization': 'Bearer ' + authToken
             },
             success: function (response) {
-                alert("Ad successfully created!");
-                console.log(response);
+                Swal.fire("Success", "Ad successfully created!", "success").then(() => {
+                    location.reload();
+                });
             },
             error: function (xhr) {
-                alert("Failed to create ad: " + xhr.responseText);
-                console.error(xhr);
+                Swal.fire("Error", "Failed to create ad: " + xhr.responseText, "error");
             }
         });
     });
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+// -----------------------------------------------------------------------------------
 
 });
