@@ -1,4 +1,7 @@
 $(document).ready(function () {
+
+    localStorage.clear();
+
     $("form").submit(function (event) {
         event.preventDefault(); // Prevent default form submission
 

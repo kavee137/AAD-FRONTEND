@@ -15848,6 +15848,7 @@ section.home-six-trending-search {
   position: relative;
   overflow: hidden;
   border-radius: 10px 0px 0 10px;
+  width: 190px;
 }
 .blog-listview .blog-img:hover {
   border-radius: 10px 0px 0 10px;
