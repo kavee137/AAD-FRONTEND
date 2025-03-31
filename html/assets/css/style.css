@@ -4254,6 +4254,7 @@ html.menu-opened body {
 
 .grid-view.featured-slider .blog-img {
   border-radius: 10px 10px 0 0;
+  height: 200px;
 }
 
 .bloglist-content .blogfeaturelink {
@@ -5517,7 +5518,7 @@ a:focus {
 }
 .featured-slider .bloglist-content .blogfeaturelink {
   display: flex;
-  margin: 15px 0;
+  margin: 5px 0;
   justify-content: space-between;
 }
 
