@@ -63,7 +63,8 @@ $(document).ready(function () {
                         let timeAgo = moment(ad.createdAt).fromNow();
 
                         let adHtml = `
-                            <div class="card">
+                         <a href="product.html?id=${ad.id}" style="z-index: 100;">
+                             <div class="card" style="cursor:pointer;">
                                 <div class="blog-widget">
                                     <div class="blog-img">
                                         <a href="product.html?id=${ad.id}">

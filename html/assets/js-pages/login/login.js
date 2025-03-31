@@ -38,7 +38,7 @@ $(document).ready(function () {
                     localStorage.setItem("loggedInUserId", id);
 
 
-                    let redirectURL = role === "ADMIN" ? "admin/index.html" : "home.html";
+                    let redirectURL = role === "ADMIN" ? "../admin/index.html" : "home.html";
 
                     Swal.fire({
                         title: "Success!",

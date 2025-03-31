@@ -55,13 +55,13 @@ $(document).ready(function () {
                     <tr>
                         <td>
                             <div class="listingtable-img">
-                                <a href="service-details.html">
+                                <a href="product.html?id=${ad.id}">
                                     <img class="img-fluid avatar-img" src="${firstImage}" alt="Ad Image">
                                 </a>
                             </div>
                         </td>
                         <td>
-                            <h6><a href="service-details.html">${ad.title}</a></h6>
+                            <h6><a href="product.html?id=${ad.id}">${ad.title}</a></h6>
                             <div class="listingtable-rate">
                                 <a href="javascript:void(0)" class="cat-icon">
                                      <i class="fa-regular fa-circle-stop"></i> ${categoryName} 
@@ -70,10 +70,10 @@ $(document).ready(function () {
                             <span class="discount-amt" style="margin: 0;">Rs.${ad.price.toLocaleString()}</span>
                         </td>
                         <td><span class="status-text">${ad.status}</span></td>
-                        <td><span class="views-count">0</span></td>
+                        <td><span class="views-count"></span></td>
                         <td>
                             <div class="action">
-                                <a href="javascript:void(0)" class="action-btn btn-view"><i class="feather-eye"></i></a>
+                                <a href="product.html?id=${ad.id}" class="action-btn btn-view"><i class="feather-eye"></i></a>
                                 <a href="javascript:void(0)" class="action-btn btn-edit"><i class="feather-edit-3"></i></a>
                                 <a href="javascript:void(0)" class="action-btn btn-trash"><i class="feather-trash-2"></i></a>
                             </div>
