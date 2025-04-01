@@ -1,7 +1,5 @@
 const isLoggedIn = localStorage.getItem("loggedInUserId"); // Change this based on your authentication system
 
-console.log("logged user: ", isLoggedIn);
-
 
 if (isLoggedIn) {
     $("#navbar-placeholder").load("logged-navbar.html", function (response, status, xhr) {
@@ -27,4 +25,7 @@ if (isLoggedIn) {
     });
     // window.location.href = "login.html";
 }
+
+console.log("logged user: ", isLoggedIn);
+
 
