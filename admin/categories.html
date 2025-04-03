@@ -9,7 +9,10 @@
 
     <!-- Favicons -->
     <link rel="shortcut icon" href="../html/assets/img/favicon.png">
-    
+
+    <!-- Sweetalert CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+
     <!-- Select 2 -->
     <link rel="stylesheet" href="assets/plugins/select2/css/select2.min.css">
 
@@ -137,7 +140,7 @@
 						<i class="fe fe-x"></i>
 					</button>
 				</div>
-                <form action="https://listee.dreamstechnologies.com/html/admin/categories.html">
+                <form>
                     <div class="modal-body py-0">
                         <div class="del-modal">
                             <p>Are you sure want to Delete?</p>
@@ -145,7 +148,7 @@
                     </div>
                     <div class="modal-footer pt-0">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Yes</button>
+                        <button type="button" id="delete-category-button" class="btn btn-primary">Yes</button>
                     </div>
                 </form>
 			</div>
@@ -176,12 +179,17 @@
     <!-- Slimscroll JS -->
     <script src="assets/plugins/slimscroll/jquery.slimscroll.min.js" type="70608bd8d359647b4a72359a-text/javascript"></script>
 
+    <!--sweet alert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
 
 
 
     <!--Common admin nav and sidebar  -->
     <script src="assets/js-pages/common-admin-nav.js"></script>
+
+    <!--Common User Checker-->
+    <script src="../admin/assets/js-pages/common-user-checker.js"></script>
 
     <!--Categories JS-->
     <script src="assets/js-pages/categories/categories.js"></script>

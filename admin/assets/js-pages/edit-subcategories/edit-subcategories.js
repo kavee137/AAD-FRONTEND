@@ -45,9 +45,11 @@ $(document).ready(function () {
 
         if (!subcategoryName || selectedParentCategoryId === "0") {
             Swal.fire({
-                icon: "warning",
                 title: "Validation Error",
                 text: "Both Subcategory Name and Parent Category are required!",
+                icon: "warning",
+                background: "#f8f9fa", // Change this to your desired background color
+                confirmButtonColor: "#3085d6"
             });
             return;
         }

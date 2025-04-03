@@ -32,7 +32,7 @@ $(document).ready(function () {
                                 <a class="delete-table me-2" href="${editUrl}">
                                     <img src="assets/img/icons/edit.svg" alt="edit">
                                 </a>
-                                <a class="delete-table" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#delete-item">
+                                <a class="delete-table" href="javascript:void(0);" data-id="${category.id}" data-bs-toggle="modal" data-bs-target="#delete-item">
                                     <img src="assets/img/icons/delete.svg" alt="delete">
                                 </a>
                             </div>
@@ -51,4 +51,63 @@ $(document).ready(function () {
             console.error("Error fetching categories:", error);
         }
     });
+
+
+
+
+
+
+
+
+    let selectedCategoryId = null; // Variable to store the selected category ID
+
+    // When the delete button in the table is clicked
+    $(document).on("click", ".delete-table", function () {
+        selectedCategoryId = $(this).data("id"); // Store category ID from the clicked button
+        console.log("Selected Category ID:", selectedCategoryId);
+    });
+
+    // Delete category when clicking the modal delete button
+    $("#delete-category-button").click(function () {
+        if (!selectedCategoryId) {
+            Swal.fire("Error!", "No category selected for deletion.", "error");
+            return;
+        }
+
+        let token = localStorage.getItem("token"); // Get JWT token
+
+        console.log("Deleting category ID:", selectedCategoryId);
+        console.log("Token:", token);
+
+        $.ajax({
+            url: `http://localhost:8082/api/v1/category/delete/${selectedCategoryId}`, // Adjust the API endpoint
+            type: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            },
+            success: function (response) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Success!",
+                    background: '#fff',
+                    text: "Category deleted successfully!",
+                    showConfirmButton: false,
+                    timer: 2000
+                }).then(() => {
+                    window.location.href = "categories.html";
+                });
+            },
+            error: function (xhr) {
+                Swal.fire("Error!", "Failed to delete category: " + xhr.responseText, "error");
+            }
+        });
+    });
+
+
+
+
+
+
+
+
 });

@@ -1,34 +1,13 @@
-$(document).ready(function () {
-    // Function to get URL parameters
-    function getQueryParam(param) {
-        let urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(param);
-    }
+$(document).ready(function() {
 
-    // Retrieve category details from URL
-    let categoryId = getQueryParam("id");
-    let categoryName = getQueryParam("name");
-    let categoryImage = getQueryParam("imageUrl"); // Existing image URL
-    let parentCategoryId = getQueryParam("parentCategoryId");
 
-    console.log("Category ID:", categoryId);
-    console.log("Category Name:", categoryName);
-    console.log("Category Image:", categoryImage);
-
-    // Set values in the form fields
-    $("#category-name").val(categoryName);
-
-    // Set existing category image
-    if (categoryImage) {
-        $("#blah").attr("src", "http://localhost:8082/" + categoryImage);
-    }
-
-    // Handle category save/update
+    // Handle category save
     $("#save-category").click(function (event) {
         event.preventDefault(); // Prevent default form submission
 
         let categoryName = $("#category-name").val().trim();
         let imageFile = $("#imgInp")[0].files[0]; // New selected image file
+        let parentCategoryId = "550e8400-e29b-41d4-a716-446655440000";
         let token = localStorage.getItem("token"); // Get JWT token from local storage
 
         console.log("Category Name:", categoryName);
@@ -40,16 +19,25 @@ $(document).ready(function () {
                 icon: "warning",
                 title: "Validation Error",
                 text: "Category Name is required!",
+                background: '#fff'
+            });
+            return;
+        }
+
+        if (!imageFile) {
+            Swal.fire({
+                icon: "warning",
+                title: "Validation Error",
+                text: "Category Image is required!",
+                background: '#fff'
             });
             return;
         }
 
         // Create category data object
         let categoryData = {
-            id: categoryId,
             name: categoryName,
-            parentCategoryId: parentCategoryId,
-            imageUrl: categoryImage // Keep existing image URL if no new image is selected
+            parentCategoryId: parentCategoryId
         };
 
         let formData = new FormData();
@@ -77,7 +65,7 @@ $(document).ready(function () {
                     icon: "success",
                     title: "Success!",
                     background: '#fff',
-                    text: "Category updated successfully!",
+                    text: "Category created successfully!",
                     showConfirmButton: false,
                     timer: 2000
                 }).then(() => {
@@ -88,6 +76,7 @@ $(document).ready(function () {
                 Swal.fire({
                     icon: "error",
                     title: "Error!",
+                    background: '#fff',
                     text: xhr.responseJSON?.message || "Something went wrong!",
                 });
             },
@@ -96,4 +85,6 @@ $(document).ready(function () {
             }
         });
     });
+
 });
+
