@@ -1,6 +1,7 @@
 $(document).ready(function () {
     let storedName = localStorage.getItem("name");
 
+
     if (storedName) {
         $("#logged-person-name").text(storedName); // ✅ Replace text inside span with class 'user-name'
     }
@@ -51,6 +52,8 @@ $(document).ready(function () {
                     let firstImage = ad.imageUrls.length > 0 ? ad.imageUrls[0] : "assets/img/default.jpg"; // Default image
                     let categoryName = categoryMap[ad.categoryId] || "Unknown Category";
 
+
+
                     let row = `
                     <tr>
                         <td>
@@ -74,7 +77,8 @@ $(document).ready(function () {
                         <td>
                             <div class="action">
                                 <a href="product.html?id=${ad.id}" class="action-btn btn-view"><i class="feather-eye"></i></a>
-                                <a href="javascript:void(0)" class="action-btn btn-edit"><i class="feather-edit-3"></i></a>
+                                <a href="edit-listing.html" class="action-btn btn-edit" onclick='editAd(${JSON.stringify(ad)})'><i class="feather-edit-3"></i></a>
+
                                 <a href="javascript:void(0)" class="action-btn btn-trash"><i class="feather-trash-2"></i></a>
                             </div>
                         </td>

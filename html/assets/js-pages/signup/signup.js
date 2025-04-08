@@ -10,6 +10,8 @@ $(document).ready(function () {
         let email = $("input[placeholder='Email Address']").val().trim();
         let password = $("input[placeholder='Password']").val().trim();
         let phone = $("input[placeholder='Phone number']").val().trim();
+        let role = "USER";
+        let image = null;
 
         // Validation checks
         if (name === "") {
@@ -32,32 +34,43 @@ $(document).ready(function () {
             return;
         }
 
-        // Prepare data for submission
-        let formData = { name, email, password, phone };
+        // Prepare user data
+        let userData = { name, email, password, phone, role };
 
-        console.log(formData);
+        let formData = new FormData();
+        formData.append("userDTO", new Blob([JSON.stringify(userData)], { type: "application/json" }));
+
+        // ✅ Append image only if it exists
+        if (image) {
+            formData.append("image", image);
+        }
 
         // Send AJAX request
         $.ajax({
             url: "http://localhost:8082/api/v1/user/register",
             type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(formData),
+            data: formData,
+            contentType: false,
+            processData: false,
             success: function (response) {
-                Swal.fire({
-                    title: "Success!",
-                    text: "Registration Successful",
-                    icon: "success",
-                    timer: 1000,
-                    background: '#fff',
-                    showConfirmButton: false
-                }).then(() => {
-                    window.location.href = "login.html"; // Redirect to login page
-                });
-
+                if (response.code === 201) {
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Registration Successful",
+                        icon: "success",
+                        timer: 1000,
+                        background: '#fff',
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = "login.html";
+                    });
+                } else {
+                    alert("Error: " + response.message);
+                }
             },
             error: function (xhr) {
-                alert("Error: " + xhr.responseText);
+                console.log(xhr);
+                alert("Error: " + (xhr.responseJSON?.message || xhr.statusText));
             }
         });
     });
@@ -67,4 +80,5 @@ $(document).ready(function () {
         let emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailPattern.test(email);
     }
+
 });
