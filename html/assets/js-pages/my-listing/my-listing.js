@@ -79,7 +79,8 @@ $(document).ready(function () {
                                 <a href="product.html?id=${ad.id}" class="action-btn btn-view"><i class="feather-eye"></i></a>
                                 <a href="edit-listing.html" class="action-btn btn-edit" onclick='editAd(${JSON.stringify(ad)})'><i class="feather-edit-3"></i></a>
 
-                                <a href="javascript:void(0)" class="action-btn btn-trash"><i class="feather-trash-2"></i></a>
+                                <a class="action-btn btn-trash" id="ad-delete-button" onclick='deleteAd("${ad.id}")'><i class="feather-trash-2"></i></a>
+
                             </div>
                         </td>
                     </tr>
@@ -93,14 +94,6 @@ $(document).ready(function () {
             }
         });
     }
-
-
-
-
-
-
-
-
 
 
 

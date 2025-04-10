@@ -227,7 +227,7 @@ $(document).ready(function () {
             },
             success: function (response) {
                 Swal.fire("Success", "Ad successfully created!", "success").then(() => {
-                    location.reload();
+                    window.location.href = "my-listing.html";
                 });
             },
             error: function (xhr) {

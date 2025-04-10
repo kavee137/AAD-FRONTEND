@@ -414,6 +414,39 @@
 			sessionStorage.setItem("editAd", JSON.stringify(ad));
 		}
 
+		function deleteAd(adId) {
+			Swal.fire({
+				title: 'Are you sure?',
+				text: "This ad will be permanently deleted!",
+				icon: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#d33',
+				cancelButtonColor: '#6c757d',
+				background: '#fff',
+				confirmButtonText: 'Yes, delete it!'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					let authToken = localStorage.getItem("token");
+
+					$.ajax({
+						url: `http://localhost:8082/api/v1/ad/deleteAd/${adId}`,
+						type: 'PUT',
+						headers: {
+							'Authorization': 'Bearer ' + authToken
+						},
+						success: function (response) {
+							Swal.fire("Deleted!", "Ad has been deleted successfully.", "success").then(() => {
+								location.reload(); // or remove the deleted ad from the DOM
+							});
+						},
+						error: function (xhr) {
+							Swal.fire("Error!", "Failed to delete the ad: " + xhr.responseText, "error");
+						}
+					});
+				}
+			});
+		}
+
 	</script>
 
 	<!--Common User Checker-->
