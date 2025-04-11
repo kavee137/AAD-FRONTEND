@@ -1,3 +1,11 @@
+
+
+
+
+let selectedFiles = []; // will contain both existing and new files
+let existingImages = []; // just to keep track of existing from DB
+
+
 $(document).ready(function () {
     const adData = JSON.parse(sessionStorage.getItem("editAd"));
 
@@ -201,38 +209,72 @@ $(document).ready(function () {
 
 
 
+    console.log("nikan method eke " + selectedFiles);
+    console.log("nikan method eke existingImages: " + JSON.stringify(existingImages));
 
-    let selectedFiles = []; // new uploads
-    let existingImages = []; // from DB
-
-// Load existing images when editing
     function loadAdImages(adId) {
         $.ajax({
             url: 'http://localhost:8082/api/v1/ad/get-ad-images/' + adId,
             type: 'GET',
             success: function (images) {
                 $('.galleryimg-upload').empty();
-                existingImages = images; // save to reuse on submit
+                existingImages = images;
 
                 images.forEach(image => {
                     const imageBox = `
-                <div class="gallery-upload existing" data-name="${image.name}">
-                    <img src="${image.base64}" class="img-fluid" alt="Image" />
-                    <a href="javascript:void(0)" class="profile-img-del" onclick="removeExistingImage(this)">
-                        <i class="feather-trash-2"></i>
-                    </a>
-                </div>`;
+                    <div class="gallery-upload existing" data-name="${image.name}">
+                        <img src="${image.base64}" class="img-fluid" alt="Image" />
+                        <a href="javascript:void(0)" class="profile-img-del profile-img-del">
+                            <i class="feather-trash-2"></i>
+                        </a>
+                    </div>`;
                     $('.galleryimg-upload').append(imageBox);
+
+                    // Convert base64 to File object and push to selectedFiles
+                    const file = base64ToFile(image.base64, image.name);
+                    selectedFiles.push(file);
                 });
             },
             error: () => alert('Failed to load images.')
         });
     }
 
+    function base64ToFile(base64, filename) {
+        const arr = base64.split(',');
+        const mime = arr[0].match(/:(.*?);/)[1];
+        const bstr = atob(arr[1]);
+        let n = bstr.length;
+        const u8arr = new Uint8Array(n);
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, { type: mime });
+    }
 
-// New uploads
+
+
+
+
+// 2. Handle new uploads
     $("#file2").on("change", function (e) {
         let files = Array.from(e.target.files);
+
+        // Check if adding these files would exceed the limit
+        if (selectedFiles.length + files.length > 5) {
+            Swal.fire({
+                title: "Too Many Images",
+                text: "You can upload a maximum of 5 images per listing. You currently have " + selectedFiles.length + " images.",
+                icon: "warning",
+                background: '#fff',
+                customClass: {
+                    popup: 'white-background-popup'
+                }
+            });
+            $(this).val(''); // Clear the file input
+            return;
+        }
+
+
         files.forEach(file => {
             if (!selectedFiles.some(f => f.name === file.name)) {
                 selectedFiles.push(file);
@@ -240,30 +282,39 @@ $(document).ready(function () {
                 let reader = new FileReader();
                 reader.onload = function (e) {
                     const imgBox = `
-                <div class="gallery-upload" data-name="${file.name}">
-                    <img src="${e.target.result}" class="img-fluid" />
-                    <a href="javascript:void(0)" class="profile-img-del" onclick="removeNewImage(this)">
-                        <i class="feather-trash-2"></i>
-                    </a>
-                </div>`;
+                    <div class="gallery-upload" data-name="${file.name}">
+                        <img src="${e.target.result}" class="img-fluid" />
+                        <a href="javascript:void(0)" class="profile-img-del profile-img-del">
+                            <i class="feather-trash-2"></i>
+                        </a>
+                    </div>`;
                     $(".galleryimg-upload").append(imgBox);
                 };
                 reader.readAsDataURL(file);
             }
         });
-        $(this).val('');
+        $(this).val(''); // Reset input
     });
 
-// Remove new image
-    function removeNewImage(el) {
-        const name = $(el).closest('.gallery-upload').data('name');
-        selectedFiles = selectedFiles.filter(f => f.name !== name);
-        $(el).closest('.gallery-upload').remove();
-    }
 
-// Submit edited ad
+
+// 5. Submit the form
     $("#submitAdBtn").click(function (e) {
         e.preventDefault();
+
+        // Check if there are more than 5 images
+        if (selectedFiles.length > 5) {
+            Swal.fire({
+                title: "Too Many Images",
+                text: "You can upload a maximum of 5 images per listing.",
+                icon: "warning",
+                background: '#fff',
+                customClass: {
+                    popup: 'white-background-popup'
+                }
+            });
+            return; // Stop form submission
+        }
 
         let adDTO = {
             id: adData.id,
@@ -274,12 +325,11 @@ $(document).ready(function () {
             userId: localStorage.getItem("loggedInUserId"),
             categoryId: $("#subCategory").val(),
             locationId: $("#city-select").val(),
-            existingImageNames: existingImages.map(img => img.name) // <-- pass to backend
+            existingImageNames: existingImages.map(img => img.name)
         };
 
         let formData = new FormData();
         formData.append("adDTO", JSON.stringify(adDTO));
-
         selectedFiles.forEach(file => formData.append("images", file));
 
         $.ajax({
@@ -289,10 +339,61 @@ $(document).ready(function () {
             contentType: false,
             processData: false,
             headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token") },
-            success: res => Swal.fire("Updated!", "Ad updated successfully.", "success").then(() => location.href = "my-listing.html"),
-            error: err => Swal.fire("Error", "Failed to update ad: " + err.responseText, "error")
+            success: res => Swal.fire({
+                title: "Updated!",
+                text: "Ad updated successfully.",
+                icon: "success",
+                background: '#ffffff',
+                customClass: {
+                    popup: 'white-background-popup'
+                }
+            }).then(() => location.href = "my-listing.html"),
+            error: err => Swal.fire({
+                title: "Error",
+                text: "Failed to update ad: " + err.responseText,
+                icon: "error",
+                background: '#ffffff',
+                customClass: {
+                    popup: 'white-background-popup'
+                }
+            })
         });
     });
+
+
+// Add this in your event binding code
+//     $('.feather-trash-2').click('click', function() {
+//
+//
+//         console.log("delete button triggered!");
+//         const $galleryItem = $(this).closest('.gallery-upload');
+//
+//         if ($galleryItem.hasClass('existing')) {
+//             removeExistingImage(this);
+//         } else {
+//             removeNewImage(this);
+//         }
+//     });
+
+// Inside your $(document).ready function
+    $(document).on('click', '.profile-img-del', function(e) {
+        e.preventDefault();
+        console.log("Delete button clicked");
+
+        const $galleryItem = $(this).closest('.gallery-upload');
+
+        if ($galleryItem.hasClass('existing')) {
+            removeExistingImage(this);
+        } else {
+            removeNewImage(this);
+        }
+    });
+
+// Remove the onclick attributes from your HTML generation
+// Change:
+// <a href="javascript:void(0)" class="profile-img-del" onclick="removeExistingImage(this)">
+// To:
+// <a href="javascript:void(0)" class="profile-img-del">
 
 
 
@@ -301,3 +402,52 @@ $(document).ready(function () {
 
 
 });
+
+
+// // 3. Remove newly added image
+// function removeNewImage(el) {
+//     const name = $(el).closest('.gallery-upload').data('name');
+//     selectedFiles = selectedFiles.filter(f => f.name !== name);
+//     $(el).closest('.gallery-upload').remove();
+//     console.log("removeNewImage : " + selectedFiles);
+//
+//
+//     const name1 = $(el).closest('.gallery-upload').data('name');
+//
+//     // Remove from existingImages array
+//     existingImages = existingImages.filter(img => img.name !== name1);
+//
+//     // IMPORTANT: Also remove from selectedFiles array
+//     selectedFiles = selectedFiles.filter(file => file.name !== name);
+//
+//     $(el).closest('.gallery-upload').remove();
+//     console.log("removeExistingImage : " + selectedFiles);
+//
+// }
+//
+// 4. Remove existing image
+// 3. Remove newly added image
+function removeNewImage(el) {
+    const name = $(el).closest('.gallery-upload').data('name');
+    console.log("Removing new image with name:", name);
+    console.log("Before removal - selectedFiles count:", selectedFiles.length);
+    selectedFiles = selectedFiles.filter(f => f.name !== name);
+    console.log("After removal - selectedFiles count:", selectedFiles.length);
+    $(el).closest('.gallery-upload').remove();
+}
+
+function removeExistingImage(el) {
+    const name = $(el).closest('.gallery-upload').data('name');
+    console.log("Removing existing image with name:", name);
+    console.log("Before removal - existingImages count:", existingImages.length);
+    console.log("Before removal - selectedFiles count:", selectedFiles.length);
+
+    // Remove from both arrays (only once)
+    existingImages = existingImages.filter(img => img.name !== name);
+    selectedFiles = selectedFiles.filter(file => file.name !== name);
+
+    console.log("After removal - existingImages count:", existingImages.length);
+    console.log("After removal - selectedFiles count:", selectedFiles.length);
+
+    $(el).closest('.gallery-upload').remove();
+}
