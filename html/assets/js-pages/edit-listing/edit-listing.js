@@ -361,21 +361,6 @@ $(document).ready(function () {
     });
 
 
-// Add this in your event binding code
-//     $('.feather-trash-2').click('click', function() {
-//
-//
-//         console.log("delete button triggered!");
-//         const $galleryItem = $(this).closest('.gallery-upload');
-//
-//         if ($galleryItem.hasClass('existing')) {
-//             removeExistingImage(this);
-//         } else {
-//             removeNewImage(this);
-//         }
-//     });
-
-// Inside your $(document).ready function
     $(document).on('click', '.profile-img-del', function(e) {
         e.preventDefault();
         console.log("Delete button clicked");
@@ -389,13 +374,6 @@ $(document).ready(function () {
         }
     });
 
-// Remove the onclick attributes from your HTML generation
-// Change:
-// <a href="javascript:void(0)" class="profile-img-del" onclick="removeExistingImage(this)">
-// To:
-// <a href="javascript:void(0)" class="profile-img-del">
-
-
 
 
 
@@ -404,29 +382,6 @@ $(document).ready(function () {
 });
 
 
-// // 3. Remove newly added image
-// function removeNewImage(el) {
-//     const name = $(el).closest('.gallery-upload').data('name');
-//     selectedFiles = selectedFiles.filter(f => f.name !== name);
-//     $(el).closest('.gallery-upload').remove();
-//     console.log("removeNewImage : " + selectedFiles);
-//
-//
-//     const name1 = $(el).closest('.gallery-upload').data('name');
-//
-//     // Remove from existingImages array
-//     existingImages = existingImages.filter(img => img.name !== name1);
-//
-//     // IMPORTANT: Also remove from selectedFiles array
-//     selectedFiles = selectedFiles.filter(file => file.name !== name);
-//
-//     $(el).closest('.gallery-upload').remove();
-//     console.log("removeExistingImage : " + selectedFiles);
-//
-// }
-//
-// 4. Remove existing image
-// 3. Remove newly added image
 function removeNewImage(el) {
     const name = $(el).closest('.gallery-upload').data('name');
     console.log("Removing new image with name:", name);

@@ -25,6 +25,7 @@ $(document).ready(function () {
         let parentCategoryId = $("#parent-category").val();
         let subCategoryName = $("#subcategory-name").val().trim();
         let token = localStorage.getItem("token"); // Get JWT token
+        console.log(token);
 
         // Validation: Check if fields are filled
         if (parentCategoryId === "0") {
@@ -82,6 +83,7 @@ $(document).ready(function () {
                 });
             },
             error: function (xhr) {
+                console.error("Error creating subcategory:", xhr);
                 Swal.fire("Error!", "Failed to create subcategory: " + xhr.responseText, "error");
             }
         });
