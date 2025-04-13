@@ -24,18 +24,21 @@ $(document).ready(function () {
                     let role = response.data.role;
                     let name = response.data.name;
                     let id = response.data.id;
+                    let userImage = response.data.userImage;
 
 
                     console.log(name);
                     console.log(role);
                     console.log(token);
                     console.log(id);
+                    console.log("userImage: " + userImage);
 
                     // Store token & role in local storage
                     localStorage.setItem("token", token);
                     localStorage.setItem("role", role);
                     localStorage.setItem("name", name);
                     localStorage.setItem("loggedInUserId", id);
+                    localStorage.setItem("userImage", userImage);
 
 
                     let redirectURL = role === "ADMIN" ? "../admin/index.html" : "home.html";

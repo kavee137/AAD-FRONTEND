@@ -168,7 +168,8 @@ $(document).ready(function () {
 
                 let productCards = "";
                 ads.forEach(ad => {
-                    productCards += `
+                    if (ad.status === "ACTIVE") {
+                        productCards += `
                         <div class="seller-another-products col-md-4 col-sm-6 col-12">
                             <div class="seller-product-card">
                                 <a href="product.html?id=${ad.id}" class="text-decoration-none">
@@ -182,6 +183,8 @@ $(document).ready(function () {
                             </div>
                         </div>
                     `;
+                    }
+
                 });
 
                 $("#sellerProductsContainer").html(productCards);

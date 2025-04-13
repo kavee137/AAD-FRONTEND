@@ -15,6 +15,11 @@
   float: left;
 }
 
+
+.sidebar-category-img {
+  height: 25px;
+}
+
 .blog-image-eight img, .blog-image img,
 .recommended-widget img,
 .blog-widget img, .blog-widget .img-blk img, .recommended-widget .img-blk img, .venue-image img, .blog-img img {
