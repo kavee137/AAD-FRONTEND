@@ -88,8 +88,25 @@ $(document).ready(function () {
                 return;
             }
 
+
+
+
+            const chatButton = $('.chat-btn');
+
+            // Set data attributes
+            chatButton.attr('data-ad-id', data.id);
+            chatButton.attr('data-seller-id', data.userId);
+            chatButton.attr('data-seller-name', data.userName);
+            chatButton.attr('data-seller-avatar', data.userImage || "https://img.icons8.com/?size=100&id=IF3iw9cQfPOU&format=png&color=000000");
+
+            // Add button to the page
+            $('#contact-options').append(chatButton);
+
             // Set title, category, date, member since, location, and price
             $(".product-title").text(data.title);
+            $(".seller-logo").attr("src", data.userImage || "https://img.icons8.com/?size=100&id=IF3iw9cQfPOU&format=png&color=000000");
+            $(".seller-avatar").attr("src", data.userImage || "https://img.icons8.com/?size=100&id=IF3iw9cQfPOU&format=png&color=000000");
+            // console.log("User image URL:", data.user.userImage);
             $(".category-name").text("Category : " + (data.categoryName || "Unknown Category"));
             $(".price").text(`Rs ${data.price.toLocaleString()}`);
 
